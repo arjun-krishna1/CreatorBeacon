@@ -2,11 +2,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<div style = "text-align: center;">
+    <br>
     <h3>Create an account</h3>
     <form action="" method="post">
         {% csrf_token %}
         {{ form|crispy}}
-
+        <br>
         <input type="submit" value="Create Account" class="btn btn-lg btn-success" />
     </form>
+</div>
 {% endblock content %}

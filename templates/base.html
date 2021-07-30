@@ -11,14 +11,14 @@
 
 
 <body>
-    <div class = "nav">
+    <div class = "navb">
         <a href = "/">Home</a>
         <a href = "/login/">Login</a>
         <a href = "/createAccount/">Sign Up</a>
         <a href = "/1/qr">QR</a>
-    </div>
+    </div><br>
 
-    <h1>CreatorBeacon</h1>
+    <h1 style = "text-align: center;">CreatorBeacon</h1>
     
     <div id="content">
         {% block content %}
@@ -36,16 +36,20 @@
 </html>
 
 <style>
+
 /* Navbar container */
-.nav {
-  overflow: hidden;
+.navb {
   background-color: #333;
   font-family: Arial;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 /* Links inside the navbar */
-.nav a {
-  float: left;
+.navb a {
+  float: none;
   font-size: 16px;
   color: white;
   text-align: center;
@@ -54,7 +58,7 @@
 }
 
 
-.nav a:hover {
+.navb a:hover {
   background-color: red;
 }
 </style>

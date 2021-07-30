@@ -17,7 +17,6 @@ def createAccountView(request):
     return render(request, "createAccount_form.html", context)
 
 def loginView(request):
-
     context = {}
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])

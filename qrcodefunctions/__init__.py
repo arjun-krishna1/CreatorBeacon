@@ -12,7 +12,7 @@ def make_qr(data):
     return name
 
 def make_website_link_qr(public_key, host_url):
-    return make_qr(host_url + public_key)
+    return make_qr("http://127.0.0.1:8000/" + public_key)
 
 def delete_old_files():
     files = os.listdir(static_path)

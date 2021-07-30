@@ -6,3 +6,6 @@ class Creator(models.Model):
     
 class Fan(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+class Event(models.Model):
+    qrcode = models.ImageField(upload_to="img")

@@ -11,5 +11,5 @@ def make_qr(data):
     code.save("static/" + name)
     return name
 
-def make_website_link_qr(hash, time):
-    return make_qr("http://127.0.0.1:8000/" + hash + time)
+def make_website_link_qr(hash):
+    return make_qr("http://127.0.0.1:8000/" + hash + "/qr")

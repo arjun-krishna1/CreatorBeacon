@@ -41,3 +41,7 @@ def loginView(request):
     form = LoginForm()
     context = {"form": form}
     return render(request, "login_form.html", context)
+
+def qrView(request):
+    print("accessed qr thing")
+    return render(request, "qr.html")

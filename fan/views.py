@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.conf import settings
+import qrcodefunctions as q
 import os
 
 from .models import Creator
@@ -47,6 +48,7 @@ def loginView(request):
     return render(request, "login_form.html", context)
 
 def qrView(request, id):
+    q.make_website_link_qr(id)
     context = {"filename": str(id)}
     return render(request, "qr.html", context)
 

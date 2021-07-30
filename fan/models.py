@@ -18,6 +18,6 @@ class Event(models.Model):
     date = models.DateField(null=True)
     start = models.TimeField(null=True)
     end = models.TimeField(null=True)
-
+    qrcode = models.ImageField(upload_to="images")
     def __str__(self):
         return f"{self.name} by {self.creator.user.username} on {self.date}"

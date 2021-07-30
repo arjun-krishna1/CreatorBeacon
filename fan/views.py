@@ -2,9 +2,9 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
-from .models import Creator
+from .models import Creator, Event
 
-from .forms import CreateAccountForm, LoginForm
+from .forms import CreateAccountForm, LoginForm, CreateEventForm
 
 def homeView(request):
     context = {"name": "Arjun & Josh"}
@@ -51,3 +51,24 @@ def creatorDashboardView(request):
 
     context = {"username": str(user)}
     return render(request, "creator_dashboard.html", context)
+
+def createEventView(request):
+    context = {}
+    if request.method == 'POST':
+        # TODO handle invalid inputs
+        creator = Creator.objects.get(user=request.user)
+        new_event = Event(
+            creator = creator,
+            name = request.POST["name"],
+            date = request.POST["date"],
+            start = request.POST["start"],
+            end = request.POST["end"],
+        )
+
+        new_event.save()
+        print("event created")
+        return redirect('creatorDashboard')
+
+    form = CreateEventForm()
+    context = {"username": str(request.user), "form": form}
+    return render(request, "createEvent.html", context)

@@ -4,7 +4,8 @@ from .views import (
     homeView,
     createAccountView,
     loginView,
-    creatorDashboardView
+    creatorDashboardView,
+    createEventView
 )
 
 urlpatterns = [
@@ -12,4 +13,5 @@ urlpatterns = [
     path('createAccount/', createAccountView, name='createAccount'),
     path('login/', loginView, name='login'),
     path('creatorDashboard/', creatorDashboardView, name='creatorDashboard'),
+    path('createEvent/', createEventView, name='createEvent'),
 ]

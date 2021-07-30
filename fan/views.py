@@ -2,6 +2,8 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
+from .models import Creator
+
 from .forms import CreateAccountForm, LoginForm
 
 def homeView(request):
@@ -41,3 +43,11 @@ def loginView(request):
     form = LoginForm()
     context = {"form": form}
     return render(request, "login_form.html", context)
+
+def creatorDashboardView(request):
+    user = request.user
+    creator = Creator.objects.filter(user=user)
+    print(creator)
+
+    context = {"username": str(user)}
+    return render(request, "creator_dashboard.html", context)

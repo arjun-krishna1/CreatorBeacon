@@ -7,6 +7,7 @@ from .views import (
     loginView,
     qrView,
     creatorDashboardView,
+    createEventView
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     path('login/', loginView, name='login'),
     path('<int:id>/qr/', qrView, name = "qr"),
     path('creatorDashboard/', creatorDashboardView, name='creatorDashboard'),
+    path('createEvent/', createEventView, name='createEvent'),
 ]

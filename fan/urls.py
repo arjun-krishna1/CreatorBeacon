@@ -5,12 +5,14 @@ from .views import (
     homeView,
     createAccountView,
     loginView,
-    qrView
+    qrView,
+    creatorDashboardView,
 )
 
 urlpatterns = [
     path('', homeView, name='home'),
     path('createAccount/', createAccountView, name='createAccount'),
     path('login/', loginView, name='login'),
-    path('qr/', qrView, name = "qr")
+    path('<int:id>/qr/', qrView, name = "qr"),
+    path('creatorDashboard/', creatorDashboardView, name='creatorDashboard'),
 ]

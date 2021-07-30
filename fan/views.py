@@ -1,6 +1,10 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.conf import settings
+import os
+
+from .models import Creator
 
 from .models import Creator, Event
 
@@ -44,6 +48,10 @@ def loginView(request):
     context = {"form": form}
     return render(request, "login_form.html", context)
 
+def qrView(request, id):
+    context = {"filename": str(id)}
+    return render(request, "qr.html", context)
+  
 def creatorDashboardView(request):
     user = request.user
     creator = Creator.objects.filter(user=user)

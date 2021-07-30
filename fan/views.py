@@ -52,9 +52,19 @@ def loginView(request):
     context = {"form": form}
     return render(request, "login_form.html", context)
 
-def qrView(request, id):
-    q.make_website_link_qr(id)
-    context = {"filename": str(id)}
+def qrView(request, event_id):
+    q.make_website_link_qr(event_id)
+    event = Event.objects.get(id=event_id)
+    
+    context = {}
+    context["filename"] = str(event_id)
+    context["event_name"] = event.name
+    context["creator_name"]= event.creator.user.username
+    context["date"]= event.date.strftime("%m/%d/%Y")
+    context["start"]= event.start.strftime("%H:%M %p")
+    context["end"]= event.end.strftime("%H:%M %p")
+
+    print(context)
     return render(request, "qr.html", context)
   
 def creatorDashboardView(request):

@@ -24,7 +24,12 @@ from .forms import (
 )
 
 def homeView(request):
-    context = {"name": "Arjun & Josh"}
+    name = "Log in!"
+
+    if request.user:
+        name = request.user.username
+
+    context = {"name": name}
     return render(request, "home.html", context)
 
 def createAccountView(request):
@@ -158,12 +163,13 @@ def enterEventView(request, event_id):
     context = {}
 
     come_back_at = event.end.strftime("%H:%M %p")
-    if curr_time < event.start:
+    event_status = event.getStatus()
+    if event_status == event.status_choices["not_started"]:
         context["time_left"] = get_diff_time(event.start, curr_time).strftime("%H:%M:%S")
         start_time_str = event.start.strftime("%H:%M %p")
         context["status"] = f"Come back at { start_time_str } to enter"
 
-    elif curr_time >= event.start and curr_time < event.end:
+    elif event_status == event.status_choices["in_progress"]:
         fan.enter(event_id)
         end_time_str = event.start.strftime("%H:%M %p")
         context["time_left"] = get_diff_time(event.end, curr_time).strftime("%H:%M:%S")
@@ -172,7 +178,6 @@ def enterEventView(request, event_id):
     else:
         # redirect to page where it shows winners, show if they won
         context["time_left"] = "00:00:00"
-
 
         entry = Entry.objects.get(event=event, fan=fan)
 
@@ -183,4 +188,25 @@ def enterEventView(request, event_id):
             context["status"] = f"😔 you didn't win this time..."
 
     return render(request, "countdown.html", context)
+
+def creatorDashboardEventView(request, event_id):
+    print(event_id)
+    print(type(event_id))
+    event = Event.objects.filter(event_id)
+    print(event)
+    event = event[0]
+    winningEntries = Entry.objects.filter(won=True)
+
+    if not(len(winningEntries)):
+        winningEntries = event.chooseWinners()
+
+    winningFans = ( (entry.fan, entry.prize) for entry in winningEntries)
+    
+    losingEntries = Entry.objects.filter(won=False)
+    losingFans = (entry.fan for entry in losingEntries)
+
+    context = {"winningFans": winningFans, "losingFans": losingFans}
+    print(context)
+
+    return render(request, "creatorDashboardEvent.html", context)
 

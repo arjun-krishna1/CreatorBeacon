@@ -8,6 +8,18 @@ class Creator(models.Model):
         return f"{self.user.username}-Creator"
     
 class Fan(models.Model):
+    def enter(self, event_id):
+        event = Event.objects.get(event_id)
+
+        if not event or not self:
+            return False
+
+        else:
+            if not Entry.objects.get(event=event, fan=self):
+                entry = Entry(fan=self, event = event)
+                entry.save()
+            return True
+            
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     def __str__(self):
         return f"{self.user.username}-Fan"
@@ -31,3 +43,5 @@ class Prize(models.Model):
 class Entry(models.Model):
     fan = models.ForeignKey(Fan, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    won = models.BooleanField(null=True)
+    prize = models.ForeignKey(Prize, on_delete=models.CASCADE)

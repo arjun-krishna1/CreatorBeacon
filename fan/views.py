@@ -3,9 +3,18 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.conf import settings
+
+from datetime import datetime
+
 import qrcodefunctions as q
 
-from .models import Creator, Event, Prize
+from .models import (
+    Creator,
+    Event,
+    Prize,
+    Entry,
+    Fan,
+)
 
 from .forms import (
     CreateAccountForm,
@@ -96,13 +105,13 @@ def createEventView(request):
     context = {"username": str(request.user), "form": form}
     return render(request, "createEvent.html", context)
 
-form_keys = [
+form_keys = (
     "form-0-name",
     "form-1-name",
     "form-2-name",
     "form-3-name",
     "form-4-name",
-]
+)
 
 def createPrizeView(request, event_id):
     context = {}
@@ -125,3 +134,41 @@ def createPrizeView(request, event_id):
     form = PrizeSet()
     context = {"username": str(request.user), "form": form}
     return render(request, "createPrize.html", context)
+
+def get_diff_time(a, b):
+    zero_day = datetime.now()
+    start = datetime.combine(zero_day.date(), a)
+    end = datetime.combine(zero_day.date(), b)
+    return zero_day + (end - start )
+
+def enterEventView(request, event_id):
+    event = Event.objects.get(id=event_id)
+    curr_time = datetime.now().time()
+
+    context = {}
+
+    come_back_at = event.end.strftime("%H:%M %p")
+    if curr_time < event.start:
+        context["time_left"] = get_diff_time(event.start, curr_time).strftime("%H:%M:%S")
+        context["status"] = f"Come back after { event.start } to enter"
+
+    elif curr_time >= event.start and curr_time < event.end:
+        fan = Fan.objects.get(user=request.user)
+        fan.enter(event_id)
+        context["time_left"] = get_diff_time(event.end, curr_time).strftime("%H:%M:%S")
+        context["status"] = f"Come back after { come_back_at } to see if you won"
+    
+    else:
+        # redirect to page where it shows winners, show if they won
+        context["time_left"] = "00:00:00"
+        fan = Fan.objects.get(user=request.user)
+        entry = Entry.objects.get(event=event, fan=fan)
+
+        if entry and entry.won:
+            context["status"] = f"Congratulations! you won a { entry.prize.name }"
+
+        else:
+            context["status"] = f"😔 you didn't win this time..."
+
+    return render(request, "countdown.html", context)
+

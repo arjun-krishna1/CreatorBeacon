@@ -4,10 +4,12 @@ from .models import (
     Creator,
     Fan,
     Event,
-    Prize
+    Prize,
+    Entry
 )
 
 admin.site.register(Creator)
 admin.site.register(Fan)
 admin.site.register(Event)
 admin.site.register(Prize)
+admin.site.register(Entry)

@@ -24,7 +24,12 @@ from .forms import (
 )
 
 def homeView(request):
-    context = {"name": "Arjun & Josh"}
+    name = "Log in!"
+
+    if request.user:
+        name = request.user.username
+
+    context = {"name": name}
     return render(request, "home.html", context)
 
 def createAccountView(request):
@@ -34,8 +39,8 @@ def createAccountView(request):
         if form.is_valid():
             new_user = User(username = request.POST["email"], password = request.POST["password"])
             new_user.save()
-            print(new_user)
-            print("account created")
+            #print(new_user)
+            #print("account created")
             return render(request, "createAccount_success.html")
         # TODO handle invalid account information
     
@@ -46,11 +51,11 @@ def createAccountView(request):
 def loginView(request):
     context = {}
     if request.method == 'POST':
-        print(request.POST['email'])
+        #print(request.POST['email'])
         user = authenticate(request, username=request.POST['email'], password=request.POST['password'])
         # TODO message about account login success status, you are logged in or please create an account
         if user is not None:
-            print("logged in")
+            #print("logged in")
             login(request, user)
             return render(request, "login_success.html")
         else:
@@ -73,15 +78,21 @@ def qrView(request, event_id):
     context["start"]= event.start.strftime("%H:%M %p")
     context["end"]= event.end.strftime("%H:%M %p")
 
-    print(context)
+    #print(context)
     return render(request, "qr.html", context)
   
 def creatorDashboardView(request):
     user = request.user
-    creator = Creator.objects.filter(user=user)
-    print(creator)
+    creator = Creator.objects.get(user=user)
+    #print(creator)
 
-    context = {"username": str(user)}
+    events = Event.objects.filter(creator=creator)
+
+    for event in events:
+        print(event.name)
+
+    context = {"username": str(user), "events": events, "profile_path": creator.img.url}
+    print(context)
     return render(request, "creator_dashboard.html", context)
 
 def createEventView(request):
@@ -98,7 +109,7 @@ def createEventView(request):
         )
 
         new_event.save()
-        print("event created")
+        #print("event created")
         return redirect('createPrize', new_event.id)
 
     form = CreateEventForm()
@@ -117,7 +128,7 @@ def createPrizeView(request, event_id):
     context = {}
     if request.method == 'POST':
         # TODO handle invalid inputs
-        print("post data ", request.POST)
+        #print("post data ", request.POST)
         event = Event.objects.get(id=event_id)
 
         for key in form_keys:
@@ -127,7 +138,7 @@ def createPrizeView(request, event_id):
             )
             this_prize.save()
             
-        print("prizes saved")
+        #print("prizes saved")
         return redirect('creatorDashboard')
 
     PrizeSet = formset_factory(CreatePrizeForm, extra=5)
@@ -155,15 +166,16 @@ def enterEventView(request, event_id):
     else:
         fan = fan[0]
 
-    context = {}
+    context = {"profile_path": event.creator.img.url, "event": event }
 
     come_back_at = event.end.strftime("%H:%M %p")
-    if curr_time < event.start:
+    event_status = event.getStatus()
+    if event_status == event.status_choices["not_started"]:
         context["time_left"] = get_diff_time(event.start, curr_time).strftime("%H:%M:%S")
         start_time_str = event.start.strftime("%H:%M %p")
         context["status"] = f"Come back at { start_time_str } to enter"
 
-    elif curr_time >= event.start and curr_time < event.end:
+    elif event_status == event.status_choices["in_progress"]:
         fan.enter(event_id)
         end_time_str = event.start.strftime("%H:%M %p")
         context["time_left"] = get_diff_time(event.end, curr_time).strftime("%H:%M:%S")
@@ -172,7 +184,6 @@ def enterEventView(request, event_id):
     else:
         # redirect to page where it shows winners, show if they won
         context["time_left"] = "00:00:00"
-
 
         entry = Entry.objects.get(event=event, fan=fan)
 
@@ -183,4 +194,29 @@ def enterEventView(request, event_id):
             context["status"] = f"😔 you didn't win this time..."
 
     return render(request, "countdown.html", context)
+
+def creatorDashboardEventView(request, event_id):
+    event = Event.objects.filter(id=event_id)[0]
+    winning_entries = Entry.objects.filter(won=True)
+
+    if not(len(winning_entries)):
+        event.chooseWinners()
+        winning_entries = Entry.objects.filter(won=True)
+
+    winning_fans = []
+    for winning_fan in winning_entries:
+        this_win_info = {"username": winning_fan.fan.user.username, "prize": winning_fan.prize}
+        winning_fans.append(this_win_info)
+    
+    losing_entries = Entry.objects.filter(won=False)
+    losing_fans = []
+
+    for entry in losing_entries:
+        this_loss_info = entry.fan.user.username
+        losing_fans.append(this_loss_info)
+
+
+    context = {"winning_fans": winning_fans, "losing_fans": losing_fans, "event": event, "profile_path": event.creator.img.url}
+
+    return render(request, "creatorDashboardEvent.html", context)
 

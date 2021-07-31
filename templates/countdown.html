@@ -4,6 +4,12 @@
 {% block content %}
 <br><br><br>
 <div style = "text-align: center;">
+    <div class="container card">
+        <div>
+            <img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ profile_path }}"/>
+            <h3>Hi {{request.user.username}}, this is {{ event.creator.user.username }}'s {{ event.name }} giveaway</h3>
+        </div>
+    </div>
     <h4>{{ status }}</h4>
     <br>
     <h1 id = "counter">{{ time_left }}</h1>

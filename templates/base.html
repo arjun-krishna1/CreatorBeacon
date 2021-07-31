@@ -11,29 +11,18 @@
 
 
 <body>
-    <div class = "navb">
-        <a href = "/">Home</a>
-        <a href = "/login/">Login</a>
-        <a href = "/createAccount/">Sign Up</a>
-        <a href = "/creatorDashboard/">Creator Dashboard</a>
+    <div class = "navb" style = "font-family: Roboto;">
+        <a href = "/"><img style = "width: 30px;" src="/static/home-icon.svg/" alt="Home"></a>
+        <a href = "/login/"><img style = "width: 30px;" src="/static/login-icon.svg/" alt="Home"></a>
+        <a href = "/creatorDashboard/"><img style = "width: 30px;" src="/static/dashboard-icon.svg/" alt="Home"></a>
     </div>
 
-    <div class = "wrapper">
-      <img src="/static/Beacon.svg" alt="Beacon">
-      <h1 style = "font-weight: 100; text-align: center; transform: rotateZ(-2deg);">Creator Beacon</h1>
-      <article class = "content">
-        <p><strong>Blah Blah text here describing thing</strong></p>
-        <p>thing things thing</p>
-        <img src = "https://searchengineland.com/figz/wp-content/seloads/2015/07/lighthouse-beacon-ss-1920.jpg" class = "inline-photo show-on-scroll">
-        <h2>making an event</h2>
-
-      </article>
-    </div>
+  
     
     <div id="content" class="container card">
         {% block content %}
         {% endblock content %}
-    </div> -->
+    </div> 
 
 
 
@@ -107,6 +96,10 @@
 </html>
 
 <style>
+.card {
+  background-color: #0e0e12;
+}
+
 body {
   background: #0e0e12;
   color: white;

@@ -12,15 +12,15 @@
 
 <body>
     <div class = "navb">
-        <a href = "/">Home</a>
-        <a href = "/login/">Login</a>
-        <a href = "/createAccount/">Sign Up</a>
-        <a href = "/creatorDashboard/">Creator Dashboard</a>
+        <a href = "{% url 'home' %}">Home</a>
+        <a href = "{% url 'login' %}">Login</a>
+<!--        <a href = "/createAccount/">Sign Up</a>-->
+        <a href = "{% url 'creatorDashboard' %}">Creator Dashboard</a>
     </div><br>
 
-    <h1 style = "text-align: center;">CreatorBeacon</h1>
+    <h1 style = "text-align: center;"><img height=100 src="{% static 'animated-logo.svg' %}"/>CreatorBeacon</h1>
     
-    <div id="content">
+    <div id="content" class="container card">
         {% block content %}
         {% endblock content %}
     </div>
@@ -60,5 +60,9 @@
 
 .navb a:hover {
   background-color: red;
+}
+
+.container {
+    padding: 3%;
 }
 </style>

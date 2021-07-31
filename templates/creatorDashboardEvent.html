@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h3>{{ request.user.username }}, here are the winners of your event:</h3>
+    <h3>{{ request.user.username }}, here are the winners of your {{ event.name }} event:</h3>
     <table class="table">
         <thead>
             <th scope="col">Name</th>

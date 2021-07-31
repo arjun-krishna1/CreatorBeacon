@@ -4,5 +4,21 @@
 {% block content %}
     <h3>{{ username }}, welcome to your creator dashboard!</h3>
     <a href="{% url 'createEvent' %}" class="btn btn-primary btn-md">Create an event</a>
+    <div class="container card">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Your Events</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in events %}
+                <tr>
+                    <td><a href="{% url 'creatorDashboardEvent' event.id %}">{{ event.name }}</a></td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
 
 {% endblock content %}

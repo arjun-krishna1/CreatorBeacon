@@ -83,10 +83,16 @@ def qrView(request, event_id):
   
 def creatorDashboardView(request):
     user = request.user
-    creator = Creator.objects.filter(user=user)
+    creator = Creator.objects.get(user=user)
     print(creator)
 
-    context = {"username": str(user)}
+    events = Event.objects.filter(creator=creator)
+
+    for event in events:
+        print(event.name)
+
+    context = {"username": str(user), "events": events}
+    print(context)
     return render(request, "creator_dashboard.html", context)
 
 def createEventView(request):
@@ -209,7 +215,7 @@ def creatorDashboardEventView(request, event_id):
         this_loss_info = entry.fan.user.username
         losing_fans.append(this_loss_info)
 
-    context = {"winning_fans": winning_fans, "losing_fans": losing_fans}
+    context = {"winning_fans": winning_fans, "losing_fans": losing_fans, "event": event}
 
     return render(request, "creatorDashboardEvent.html", context)
 

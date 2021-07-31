@@ -61,13 +61,13 @@ class Event(models.Model):
         return self.status
         
     def chooseWinners(self):
-        prizes = Prize.objects.filter(event = self)
-        fan_entries = Entry.objects.filter(event = self)
+        prizes = Prize.objects.filter(event=self)
+        fan_entries = Entry.objects.filter(event=self)
 
-        choices = random.choices(fan_entries, len(prizes))
+        choices = random.choices(population=[entry.id for entry in fan_entries], k=len(prizes))
 
         for i in range(len(choices)):
-            entry = choices[i]
+            entry = Entry.objects.get(id=choices[i])
             entry.won = True
             entry.prize = prizes[i]
             entry.save()

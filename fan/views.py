@@ -190,23 +190,26 @@ def enterEventView(request, event_id):
     return render(request, "countdown.html", context)
 
 def creatorDashboardEventView(request, event_id):
-    print(event_id)
-    print(type(event_id))
-    event = Event.objects.filter(event_id)
-    print(event)
-    event = event[0]
-    winningEntries = Entry.objects.filter(won=True)
+    event = Event.objects.filter(id=event_id)[0]
+    winning_entries = Entry.objects.filter(won=True)
 
-    if not(len(winningEntries)):
-        winningEntries = event.chooseWinners()
+    if not(len(winning_entries)):
+        event.chooseWinners()
+        winning_entries = Entry.objects.filter(won=True)
 
-    winningFans = ( (entry.fan, entry.prize) for entry in winningEntries)
+    winning_fans = []
+    for winning_fan in winning_entries:
+        this_win_info = {"username": winning_fan.fan.user.username, "prizename": winning_fan.prize.name}
+        winning_fans.append(this_win_info)
     
-    losingEntries = Entry.objects.filter(won=False)
-    losingFans = (entry.fan for entry in losingEntries)
+    losing_entries = Entry.objects.filter(won=False)
+    losing_fans = []
 
-    context = {"winningFans": winningFans, "losingFans": losingFans}
-    print(context)
+    for entry in losing_entries:
+        this_loss_info = entry.fan.user.username
+        losing_fans.append(this_loss_info)
+
+    context = {"winning_fans": winning_fans, "losing_fans": losing_fans}
 
     return render(request, "creatorDashboardEvent.html", context)
 

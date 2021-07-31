@@ -41,9 +41,9 @@ class Event(models.Model):
     img = models.ImageField(upload_to='profile/event/', null=True, blank=True)
 
     status_choices = {
-        "not_started": "Not Started",
-        "in_progress": "In Progress",
-        "over": "Over"}
+        "not_started": "not started",
+        "in_progress": "in progress",
+        "over": "over"}
 
     def __str__(self):
         return f"{self.name} by {self.creator.user.username} on {self.date}"

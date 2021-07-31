@@ -201,27 +201,21 @@ def enterEventView(request, event_id):
     return render(request, "countdown.html", context)
 
 def creatorDashboardEventView(request, event_id):
-    event = Event.objects.filter(id=event_id)[0]
-    winning_entries = Entry.objects.filter(won=True)
+    event = Event.objects.get(id=event_id)
 
-    if not(len(winning_entries)):
-        event.chooseWinners()
-        winning_entries = Entry.objects.filter(won=True)
+    context = {"event": event, "event_over": event.getStatus()}
 
-    winning_fans = []
-    for winning_fan in winning_entries:
-        this_win_info = {"username": winning_fan.fan.user.username, "prize": winning_fan.prize}
-        winning_fans.append(this_win_info)
-    
-    losing_entries = Entry.objects.filter(won=False)
-    losing_fans = []
+    entries = Entry.objects.filter(event=event)
+    context["entries"] = entries
 
-    for entry in losing_entries:
-        this_loss_info = entry.fan.user.username
-        losing_fans.append(this_loss_info)
+    if event.getStatus() == Event.status_choices["over"]:
+        winning_entries = entries.filter(won=True)
 
+        if not(len(winning_entries)):
+            event.chooseWinners()
+            winning_entries = entries.filter(won=True)
 
-    context = {"winning_fans": winning_fans, "losing_fans": losing_fans, "event": event, "profile_path": event.creator.img.url}
+        context["winning_entries"] = winning_entries
 
     return render(request, "creatorDashboardEvent.html", context)
 

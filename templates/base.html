@@ -12,18 +12,45 @@
 
 <body>
     <div class = "navb">
-        <a href = "{% url 'home' %}">Home</a>
-        <a href = "{% url 'login' %}">Login</a>
-<!--        <a href = "/createAccount/">Sign Up</a>-->
-        <a href = "{% url 'creatorDashboard' %}">Creator Dashboard</a>
-    </div><br>
+        <a href = "/">Home</a>
+        <a href = "/login/">Login</a>
+        <a href = "/createAccount/">Sign Up</a>
+        <a href = "/creatorDashboard/">Creator Dashboard</a>
+    </div>
 
-    <h1 style = "text-align: center;"><img height=100 src="{% static 'animated-logo.svg' %}"/>CreatorBeacon</h1>
+    <div class = "wrapper">
+      <img src="/static/Beacon.svg" alt="Beacon">
+      <h1 style = "font-weight: 100; text-align: center; transform: rotateZ(-2deg);">Creator Beacon</h1>
+      <article class = "content">
+        <p><strong>Blah Blah text here describing thing</strong></p>
+        <p>thing things thing</p>
+        <img src = "https://searchengineland.com/figz/wp-content/seloads/2015/07/lighthouse-beacon-ss-1920.jpg" class = "inline-photo show-on-scroll">
+        <h2>making an event</h2>
+
+      </article>
+    </div>
     
     <div id="content" class="container card">
         {% block content %}
         {% endblock content %}
-    </div>
+    </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -32,10 +59,101 @@
 
 </body>
 
+<!-- show on scroll -->
+<script> 
+  
+  
+  var scroll = window.requestAnimationFrame || 
+              function(callback) {
+                window.setTimeout(callback, 1000/60)
+                };
+  var elementsToShow = document.querySelectorAll(".show-on-scroll");
+  
+  function loop() {
+    elementsToShow.forEach(function(element) {
+      if (isElementInViewport(element))
+      {
+        element.classList.add("is-visible");
+      }
+      else
+      {
+        element.classList.remove("is-visible");
+      }
+    });
+    scroll(loop);
+  }
+  loop();
+
+  function isElementInViewport(el) 
+  {
+    if (typeof jQuery == "function" && el instanceof jQuery) {
+      el = el[0];
+    }
+    var rect = el.getBoundingClientRect();
+    return (
+      (rect.top <= 0 && rect.bottom >= 0) ||
+      (rect.bottom >= (window.innHeight || document.documentElement.clientHeight) &&
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight)) ||
+      (rect.top >= 0 && rect.bottom <= (window.innerHeight ||
+      document.documentElement.clientHeight))
+    );
+  }
+
+
+
+
+</script>
 
 </html>
 
 <style>
+body {
+  background: #0e0e12;
+  color: white;
+  font-family: Roboto;
+}
+
+.wrapper {
+  margin: 2em;
+}
+
+.inline-photo {
+  box-shadow: 1em 1em 1em 2em .25em rgba(0, 0, 0, .2);
+  margin: 2em auto; 
+  transform: translate(4em) rotateZ(-5deg);
+  transition: transform 4s .25s cubic-bezier(0, 1, .3, 1), 
+              opacity .3s .25s ease-out;
+  max-width: 600px;
+  width: 90%;
+  opacity: 0;
+  will-change: transform, opacity;
+
+}
+
+.inline-photo.is-visible {
+  opacity: 1; 
+  transform: rotateZ(-2deg);
+
+}
+
+header.is-visible {
+  opacity: 1;
+}
+
+.heading {
+  opacity: 0;
+  transition: opacity .5s .25s ease-out;
+  transform: translate(-50%, calc(-50% + 1em));
+}
+
+.is-visible .heading {
+  transform: translate(50%, 50% + 1em);
+}
+
+.heading {
+  transition: transform 4s .35s cubic-bezier(0, 1, .3, 1);
+  will-change: transform;
+}
 
 /* Navbar container */
 .navb {

@@ -21,3 +21,4 @@ urlpatterns = [
     path('createEvent/', createEventView, name='createEvent'),
     path('createPrize/<int:event_id>/', createPrizeView, name='createPrize'),
     path('enterEvent/<int:event_id>/', enterEventView, name='enterEvent'),
+]

@@ -44,4 +44,6 @@ class Entry(models.Model):
     fan = models.ForeignKey(Fan, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     won = models.BooleanField(null=True)
-    prize = models.ForeignKey(Prize, on_delete=models.CASCADE, null=True)
+    prize = models.ForeignKey(Prize, on_delete=models.CASCADE, null=True, blank=True)
+    def __str__(self):
+        return f"Entry by {self.fan.user.username} for {self.event.name}"

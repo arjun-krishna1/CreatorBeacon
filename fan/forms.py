@@ -4,6 +4,8 @@ from django.forms import (
     DateInput, TimeInput
 )
 
+from django import forms
+
 from django.contrib.auth.models import User
 
 from .models import Event, Prize
@@ -17,6 +19,8 @@ class LoginForm(ModelForm):
     class Meta:
         model = User
         fields = ["username", "password"]
+
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
 
 class DateInput(DateInput):
     # A custom widget to use the HTML5 date picker

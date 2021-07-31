@@ -2,7 +2,7 @@ from django.forms.formsets import formset_factory
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.contrib import messages
 
 from datetime import datetime
 
@@ -56,8 +56,10 @@ def loginView(request):
         if user is not None:
             #print("logged in")
             login(request, user)
-            return render(request, "login_success.html")
+            messages.add_message(request, messages.SUCCESS, 'Logged in!')
+            return redirect("creatorDashboard")
         else:
+            messages.add_message(request, messages.ERROR, '😔 Login Failed')
             print("login failed, try again")
 
 

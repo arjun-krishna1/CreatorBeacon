@@ -11,6 +11,13 @@
 
 
 <body>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div{% if message.tags %} class="{{ message.tags }} alert alert-success"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class = "navb">
         <a href = "{% url 'home' %}">Home</a>
         <a href = "{% url 'login' %}">Login</a>

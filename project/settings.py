@@ -37,7 +37,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -60,29 +59,29 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-from arjuns_secrets import DB_INFO
+##from arjuns_secrets import DB_INFO
+
+##DATABASES = {
+##        'default': {
+##            'ENGINE' : 'django_cockroachdb',
+##            'USER' : DB_INFO["user"],
+##            'PASSWORD': DB_INFO["password"],
+##            'HOST' : DB_INFO["globalhost"],
+##            'PORT' : 26257,
+##            'NAME' : DB_INFO["name"],
+##            'OPTIONS': {
+##                'sslmode': 'verify-full',
+##                'sslrootcert': DB_INFO["sslrootcert"],
+##            },
+##    }
+##}
 
 DATABASES = {
-        'default': {
-            'ENGINE' : 'django_cockroachdb',
-            'USER' : DB_INFO["user"],
-            'PASSWORD': DB_INFO["password"],
-            'HOST' : DB_INFO["globalhost"],
-            'PORT' : 26257,
-            'NAME' : DB_INFO["name"],
-            'OPTIONS': {
-                'sslmode': 'verify-full',
-                'sslrootcert': DB_INFO["sslrootcert"],
-            },
-    }
-}
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
+ }
 
 
 # Password validation

@@ -5,14 +5,23 @@
 <br><br><br>
 <div style = "text-align: center;">
     <div class="container card">
-        <div>
-            <img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ profile_path }}"/>
-            <h3>Hi {{request.user.username}}, this is {{ event.creator.user.username }}'s {{ event.name }} giveaway</h3>
+        <div class = "pfp">
+            <img src="{{ profile_path }}"/>
+            <h3>&nbsp;Hi {{request.user.username}}, this is {{ event.creator.user.username }}'s "{{ event.name }}"" giveaway</h3>
         </div>
     </div>
+    <br>
     <h4>{{ status }}</h4>
     <br>
-    <h1 id = "counter">{{ time_left }}</h1>
+    <div style = "text-align: center;">
+        <h1 style = "font-weight: 100;"id = "counter">{{ time_left }}</h1>
+    </div>
+    <style>      
+        #counter {
+            font-family: 'digital-7', Roboto;
+            src: url("digital-7.ttf")
+        }
+    </style>
 </div>
 
 <script>
@@ -33,6 +42,7 @@
             {
                 if (times.every((x) => x == 0))
                 {
+                    currentTime.innerHTML = "Event Over";
                     return;
                 }
                 times[i] = "59";

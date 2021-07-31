@@ -3,13 +3,20 @@
 
 {% block content %}
     <div class="container card">
-        <div class = "pfp">
-            <img src="{{ event.creator.img.url }}"/>
-            <img src="{{ event.img.url }}"/>
-            <h3>{{ request.user.username }}, {{ event.name }} is {{ event.status }}</h3>
+        <div>
+            <img class = "eventImage" src="{{ event.creator.img.url }}"/>
         </div>
-        {%  if event_over %}
-            <h3>The winners of {{ event.name }}:</h3>
+        <br>
+        <div class = "pfp center">
+            <img src="{{ event.img.url }}"/>
+            <h3>&nbsp;&nbsp;{{ request.user.username }}. {{ event.name }} is {{ event.status }}</h3>
+        </div>
+        <br>
+    {%  if event_over %}
+        <div class="container card">
+            {% if event_over %}
+                    <h3>The winners of {{ event.name }}:</h3>
+            {% endif %}
             <table class="table">
                 <thead>
                     <th scope="col">Winner</th>
@@ -18,10 +25,10 @@
                 </thead>
                 <tbody>
                     {% for entry in winning_entries %}
-                    <tr class = "pfp">
-                        <td><img src="{{ entry.fan.img.url }}"/> {{ entry.fan.user.username }}</td>
-                        <td><img src="{{ entry.prize.img.url }}"/>{{ entry.prize.name }}</td>
-                        <td>{{ entry.fan.user.email }}</td>
+                    <tr >
+                        <td><img class = "profilePicture" src="{{ entry.fan.img.url }}"/>&nbsp;&nbsp;&nbsp;&nbsp;{{ entry.fan.user.username }}</td>
+                        <td><img class = "prizePicture" src="{{ entry.prize.img.url }}"/>&nbsp;&nbsp;&nbsp;&nbsp;{{ entry.prize.name }}</td>
+                        <td style = "vertical-align: middle;">{{ entry.fan.user.email }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -33,19 +40,18 @@
 
         <div class="container card">
             <h3>Everyone who has entered {{ event.name }}:</h3>
-
-            <table class="table">
+            <table class = "table">
                 <thead>
-                    <th scope="col">Fan</th>
-                    <th scope="col">Contact</th>
+                    <tr>
+                        <th>Fan</th>
+                        <th>Contact</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {% for entry in entries %}
-                    <tr class = "pfp">
-                        <td><img src="{{ entry.fan.img.url }}"/> {{ entry.fan.user.username }}</td>
-                        <td>{{ entry.fan.user.email }}</td>
-                        <td> </td>
-                        <
+                    <tr>
+                        <td><img class = "profilePicture" src="{{ entry.fan.img.url }}"/>&nbsp;&nbsp;&nbsp;&nbsp;{{ entry.fan.user.username }}</td>
+                        <td style = "vertical-align: middle;">{{ entry.fan.user.email }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

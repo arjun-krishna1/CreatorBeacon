@@ -2,17 +2,23 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h3>{{ request.user.username }}, here are the winners of your {{ event.name }} event:</h3>
+    <div class="container card">
+        <div>
+            <img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ profile_path }}"/>
+            <img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ event.img.url }}"/>
+            <h3>{{ request.user.username }}, here are the winners of your {{ event.name }} event:</h3>
+        </div>
+    </div>
     <table class="table">
         <thead>
             <th scope="col">Name</th>
-            <th scope="col">Contact</th>
+            <th scope="col">Prize</th>
         </thead>
         <tbody>
             {% for winning_fan in winning_fans %}
             <tr>
                 <td>{{ winning_fan.username }}</td>
-                <td>{{ winning_fan.prizename }}</td>
+                <td><img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ winning_fan.prize.img.url }}"/>{{ winning_fan.prize.name }}</td>
             </tr>
             {% endfor %}
         </tbody>

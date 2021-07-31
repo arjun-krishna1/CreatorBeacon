@@ -32,12 +32,12 @@ class Fan(models.Model):
             return True
 
 class Event(models.Model):
-    creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=100, null=True)
-    status = models.CharField(max_length=100, null=True)
-    date = models.DateField(null=True)
-    start = models.TimeField(null=True)
-    end = models.TimeField(null=True)
+    creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=100, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    start = models.TimeField(null=True, blank=True)
+    end = models.TimeField(null=True, blank=True)
     img = models.ImageField(upload_to='profile/event/', null=True, blank=True)
 
     status_choices = {
@@ -79,8 +79,8 @@ class Event(models.Model):
             
 
 class Prize(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=100, null=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
     img = models.ImageField(upload_to='profile/prize', null=True, blank=True)
     def __str__(self):
         return f"{self.name} for {self.event.name} by {self.event.creator.user.username}"
@@ -88,7 +88,7 @@ class Prize(models.Model):
 class Entry(models.Model):
     fan = models.ForeignKey(Fan, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    won = models.BooleanField(null=True)
+    won = models.BooleanField(null=True, blank=True)
     prize = models.ForeignKey(Prize, on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return f"Entry by {self.fan.user.username} for {self.event.name}"

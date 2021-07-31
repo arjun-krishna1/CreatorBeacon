@@ -166,7 +166,7 @@ def enterEventView(request, event_id):
     else:
         fan = fan[0]
 
-    context = {}
+    context = {"profile_path": event.creator.img.url, "event": event }
 
     come_back_at = event.end.strftime("%H:%M %p")
     event_status = event.getStatus()
@@ -205,7 +205,7 @@ def creatorDashboardEventView(request, event_id):
 
     winning_fans = []
     for winning_fan in winning_entries:
-        this_win_info = {"username": winning_fan.fan.user.username, "prizename": winning_fan.prize.name}
+        this_win_info = {"username": winning_fan.fan.user.username, "prize": winning_fan.prize}
         winning_fans.append(this_win_info)
     
     losing_entries = Entry.objects.filter(won=False)
@@ -215,7 +215,8 @@ def creatorDashboardEventView(request, event_id):
         this_loss_info = entry.fan.user.username
         losing_fans.append(this_loss_info)
 
-    context = {"winning_fans": winning_fans, "losing_fans": losing_fans, "event": event}
+
+    context = {"winning_fans": winning_fans, "losing_fans": losing_fans, "event": event, "profile_path": event.creator.img.url}
 
     return render(request, "creatorDashboardEvent.html", context)
 

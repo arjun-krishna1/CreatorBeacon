@@ -16,7 +16,7 @@ class CreateAccountForm(ModelForm):
 class LoginForm(ModelForm):
     class Meta:
         model = User
-        fields = ["email", "password"]
+        fields = ["username", "password"]
 
 class DateInput(DateInput):
     # A custom widget to use the HTML5 date picker

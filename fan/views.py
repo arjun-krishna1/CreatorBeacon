@@ -52,7 +52,7 @@ def loginView(request):
     context = {}
     if request.method == 'POST':
         #print(request.POST['email'])
-        user = authenticate(request, username=request.POST['email'], password=request.POST['password'])
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         # TODO message about account login success status, you are logged in or please create an account
         if user is not None:
             #print("logged in")

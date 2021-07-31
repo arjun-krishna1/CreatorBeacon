@@ -21,6 +21,7 @@ class LoginForm(ModelForm):
         fields = ["username", "password"]
 
     password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    username = forms.CharField(label="Username")
 
 class DateInput(DateInput):
     # A custom widget to use the HTML5 date picker

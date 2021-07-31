@@ -9,13 +9,13 @@ class Creator(models.Model):
     
 class Fan(models.Model):
     def enter(self, event_id):
-        event = Event.objects.get(event_id)
+        event = Event.objects.get(id=event_id)
 
         if not event or not self:
             return False
 
         else:
-            if not Entry.objects.get(event=event, fan=self):
+            if not Entry.objects.filter(event=event, fan=self):
                 entry = Entry(fan=self, event = event)
                 entry.save()
             return True
@@ -44,4 +44,4 @@ class Entry(models.Model):
     fan = models.ForeignKey(Fan, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     won = models.BooleanField(null=True)
-    prize = models.ForeignKey(Prize, on_delete=models.CASCADE)
+    prize = models.ForeignKey(Prize, on_delete=models.CASCADE, null=True)

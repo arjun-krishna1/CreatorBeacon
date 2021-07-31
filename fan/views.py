@@ -145,23 +145,35 @@ def enterEventView(request, event_id):
     event = Event.objects.get(id=event_id)
     curr_time = datetime.now().time()
 
+    
+    fan = Fan.objects.filter(user=request.user)
+
+    if len(fan) == 0:
+        fan = Fan(user = request.user)
+        fan.save()
+
+    else:
+        fan = fan[0]
+
     context = {}
 
     come_back_at = event.end.strftime("%H:%M %p")
     if curr_time < event.start:
         context["time_left"] = get_diff_time(event.start, curr_time).strftime("%H:%M:%S")
-        context["status"] = f"Come back after { event.start } to enter"
+        start_time_str = event.start.strftime("%H:%M %p")
+        context["status"] = f"Come back at { start_time_str } to enter"
 
     elif curr_time >= event.start and curr_time < event.end:
-        fan = Fan.objects.get(user=request.user)
         fan.enter(event_id)
+        end_time_str = event.start.strftime("%H:%M %p")
         context["time_left"] = get_diff_time(event.end, curr_time).strftime("%H:%M:%S")
-        context["status"] = f"Come back after { come_back_at } to see if you won"
+        context["status"] = f"You are entered! Come back after { come_back_at } to see if you won"
     
     else:
         # redirect to page where it shows winners, show if they won
         context["time_left"] = "00:00:00"
-        fan = Fan.objects.get(user=request.user)
+
+
         entry = Entry.objects.get(event=event, fan=fan)
 
         if entry and entry.won:

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<br><br><br>
+<div style = "text-align: center;">
+    <h4>{{ status }}</h4>
+    <br>
+    <h1 id = "counter">{{ time_left }}</h1>
+</div>
+
+{% endblock content %}
+
+
+
+<script>
+    let time = document.getElementById("counter");
+
+    function countDown(currentTime)
+    {
+        let times = currentTime.innerHTML.split(":").reverse();
+        for (var i = 0; i < times.length; i++)
+        {
+            times[i] = parseInt(times[i]);
+            if (times[i])
+            {
+                times[i] = ("0" + (times[i] - 1)).slice(-2);
+                break;
+            }
+            else
+            {
+                if (times.every((x) => x == 0))
+                {
+                    return;
+                }
+                times[i] = "59";
+            }
+            
+        }
+        currentTime.innerHTML = times.reverse().join(":");
+        setTimeout(() => {
+            countDown(currentTime)
+        }, 1000);
+    }
+    countDown(time)
+</script>
+
+
+

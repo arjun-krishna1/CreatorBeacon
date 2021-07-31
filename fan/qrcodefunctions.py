@@ -12,5 +12,5 @@ def make_qr(data, name):
     return name
 
 def make_website_link_qr(id):
-    return make_qr("http://127.0.0.1:8000/" + str(id), id)
+    return make_qr("http://127.0.0.1:8000/qrcode/" + str(id), id)
 

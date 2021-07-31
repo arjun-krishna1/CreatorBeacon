@@ -6,7 +6,7 @@ from django.forms import (
 
 from django.contrib.auth.models import User
 
-from .models import Event
+from .models import Event, Prize
 
 class CreateAccountForm(ModelForm):
     class Meta:
@@ -35,3 +35,8 @@ class CreateEventForm(ModelForm):
     date = DateField(widget=DateInput)
     start = TimeField(widget=TimeInput)
     end = TimeField(widget=TimeInput)
+
+class CreatePrizeForm(ModelForm):
+    class Meta:
+        model = Prize
+        fields = ["name"]

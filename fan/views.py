@@ -1,15 +1,18 @@
+from django.forms.formsets import formset_factory
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.conf import settings
 import qrcodefunctions as q
-import os
 
-from .models import Creator
+from .models import Creator, Event, Prize
 
-from .models import Creator, Event
-
-from .forms import CreateAccountForm, LoginForm, CreateEventForm
+from .forms import (
+    CreateAccountForm,
+    LoginForm,
+    CreateEventForm,
+    CreatePrizeForm
+)
 
 def homeView(request):
     context = {"name": "Arjun & Josh"}
@@ -49,9 +52,19 @@ def loginView(request):
     context = {"form": form}
     return render(request, "login_form.html", context)
 
-def qrView(request, id):
-    q.make_website_link_qr(id)
-    context = {"filename": str(id)}
+def qrView(request, event_id):
+    q.make_website_link_qr(event_id)
+    event = Event.objects.get(id=event_id)
+    
+    context = {}
+    context["filename"] = str(event_id)
+    context["event_name"] = event.name
+    context["creator_name"]= event.creator.user.username
+    context["date"]= event.date.strftime("%m/%d/%Y")
+    context["start"]= event.start.strftime("%H:%M %p")
+    context["end"]= event.end.strftime("%H:%M %p")
+
+    print(context)
     return render(request, "qr.html", context)
   
 def creatorDashboardView(request):
@@ -77,8 +90,38 @@ def createEventView(request):
 
         new_event.save()
         print("event created")
-        return redirect('creatorDashboard')
+        return redirect('createPrize', new_event.id)
 
     form = CreateEventForm()
     context = {"username": str(request.user), "form": form}
     return render(request, "createEvent.html", context)
+
+form_keys = [
+    "form-0-name",
+    "form-1-name",
+    "form-2-name",
+    "form-3-name",
+    "form-4-name",
+]
+
+def createPrizeView(request, event_id):
+    context = {}
+    if request.method == 'POST':
+        # TODO handle invalid inputs
+        print("post data ", request.POST)
+        event = Event.objects.get(id=event_id)
+
+        for key in form_keys:
+            this_prize = Prize (
+                name = request.POST[key],
+                event = event,
+            )
+            this_prize.save()
+            
+        print("prizes saved")
+        return redirect('creatorDashboard')
+
+    PrizeSet = formset_factory(CreatePrizeForm, extra=5)
+    form = PrizeSet()
+    context = {"username": str(request.user), "form": form}
+    return render(request, "createPrize.html", context)

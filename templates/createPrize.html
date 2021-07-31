@@ -2,11 +2,12 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h3>Create an event</h3>
+    <h3>Add prizes to event</h3>
     <form action="" method="post">
+        {{ form.management_data }}
         {% csrf_token %}
         {{ form|crispy}}
 
-        <input type="submit" value="Add prizes to event" class="btn btn-lg btn-success" />
+        <input type="submit" value="Finish creating event" class="btn btn-lg btn-success" />
     </form>
 {% endblock content %}

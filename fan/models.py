@@ -18,6 +18,16 @@ class Event(models.Model):
     date = models.DateField(null=True)
     start = models.TimeField(null=True)
     end = models.TimeField(null=True)
-    qrcode = models.ImageField(upload_to="images")
+
     def __str__(self):
         return f"{self.name} by {self.creator.user.username} on {self.date}"
+
+class Prize(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=100, null=True)
+    def __str__(self):
+        return f"{self.name} for {self.event.name} by {self.event.creator.user.username}"
+
+class Entry(models.Model):
+    fan = models.ForeignKey(Fan, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)

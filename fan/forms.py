@@ -13,7 +13,7 @@ from .models import Event, Prize
 class CreateAccountForm(ModelForm):
     class Meta:
         model = User
-        fields = ["email", "password"]
+        fields = ["username", "password"]
 
 class LoginForm(ModelForm):
     class Meta:

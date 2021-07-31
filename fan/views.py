@@ -37,7 +37,7 @@ def createAccountView(request):
     if request.method == 'POST':
         form = CreateAccountForm(request.POST)
         if form.is_valid():
-            new_user = User(username = request.POST["email"], password = request.POST["password"])
+            new_user = User(username = request.POST["username"], password = request.POST["password"])
             new_user.save()
             #print(new_user)
             #print("account created")
@@ -51,7 +51,6 @@ def createAccountView(request):
 def loginView(request):
     context = {}
     if request.method == 'POST':
-        #print(request.POST['email'])
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         # TODO message about account login success status, you are logged in or please create an account
         if user is not None:

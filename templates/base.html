@@ -11,13 +11,21 @@
 
 
 <body>
-    <div class = "navb" style = "font-family: Roboto;">
-        <a href = "/"><img style = "width: 30px;" src="/static/home-icon.svg/" alt="Home"></a>
-        <a href = "/login/"><img style = "width: 30px;" src="/static/login-icon.svg/" alt="Home"></a>
-        <a href = "/creatorDashboard/"><img style = "width: 30px;" src="/static/dashboard-icon.svg/" alt="Home"></a>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div{% if message.tags %} class="{{ message.tags }} alert alert-success"{% endif %}>{{ message }}</div>
+        {% endfor %}
     </div>
+    {% endif %}
+    <div class = "navb">
+        <a href = "{% url 'home' %}">Home</a>
+        <a href = "{% url 'login' %}">Login</a>
+<!--        <a href = "/createAccount/">Sign Up</a>-->
+        <a href = "{% url 'creatorDashboard' %}">Creator Dashboard</a>
+    </div><br>
 
-  
+    <h1 style = "text-align: center;"><img height=100 src="{% static 'animated-logo.svg' %}"/>CreatorBeacon</h1>
     
     <div id="content" class="container card">
         {% block content %}

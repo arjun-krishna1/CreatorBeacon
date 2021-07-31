@@ -4,37 +4,50 @@
 {% block content %}
     <div class="container card">
         <div class = "pfp">
-            <img src="{{ profile_path }}"/>
+            <img src="{{ event.creator.img.url }}"/>
             <img src="{{ event.img.url }}"/>
-            <h3>&nbsp;&nbsp;{{ request.user.username }}, here are the winners of your {{ event.name }} event:</h3>
+            <h3>{{ request.user.username }}, {{ event.name }} is {{ event.status }}</h3>
         </div>
-    </div>
-    <table class="table">
-        <thead>
-            <th scope="col">Name</th>
-            <th scope="col">Prize</th>
-        </thead>
-        <tbody>
-            {% for winning_fan in winning_fans %}
-            <tr>
-                <td>{{ winning_fan.username }}</td>
-                <td class = "pfp" ><img height=100 width=100 src="{{ winning_fan.prize.img.url }}"/>{{ winning_fan.prize.name }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {%  if event_over %}
+        <div class="container card">
+            {% if event_over %}
+                    <h3>The winners of {{ event.name }}:</h3>
+            {% endif %}
+            <table class="table">
+                <thead>
+                    <th scope="col">Winner</th>
+                    <th scope="col">Prize</th>
+                    <th scope="col">Contact</th>
+                </thead>
+                <tbody>
+                    {% for entry in winning_entries %}
+                    <tr class = "pfp">
+                        <td><img src="{{ entry.fan.img.url }}"/> {{ entry.fan.user.username }}</td>
+                        <td><img src="{{ entry.prize.img.url }}"/>{{ entry.prize.name }}</td>
+                        <td>{{ entry.fan.user.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {%  endif %}
 
-    <h3>{{ request.user.username }}, here are the others who entered:</h3>
-    <table class="table">
-        <thead>
-            <th scope="col">Name</th>
-        </thead>
-        <tbody>
-            {% for losing_fan_name in losing_fan_names %}
-            <tr>
-                <td>{{ losing_fan_name }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <div class="container card">
+            <h3>Everyone who has entered {{ event.name }}:</h3>
+
+            <table class="table">
+                <thead>
+                    <th scope="col">Fan</th>
+                    <th scope="col">Contact</th>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                    <tr class = "pfp">
+                        <td><img src="{{ entry.fan.img.url }}"/> {{ entry.fan.user.username }}</td>
+                        <td>{{ entry.fan.user.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 {% endblock content %}

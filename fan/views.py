@@ -2,7 +2,7 @@ from django.forms.formsets import formset_factory
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.contrib import messages
 
 from datetime import datetime
 
@@ -37,7 +37,7 @@ def createAccountView(request):
     if request.method == 'POST':
         form = CreateAccountForm(request.POST)
         if form.is_valid():
-            new_user = User(username = request.POST["email"], password = request.POST["password"])
+            new_user = User(username = request.POST["username"], password = request.POST["password"])
             new_user.save()
             #print(new_user)
             #print("account created")
@@ -51,14 +51,15 @@ def createAccountView(request):
 def loginView(request):
     context = {}
     if request.method == 'POST':
-        #print(request.POST['email'])
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         # TODO message about account login success status, you are logged in or please create an account
         if user is not None:
             #print("logged in")
             login(request, user)
-            return render(request, "login_success.html")
+            messages.add_message(request, messages.SUCCESS, 'Logged in!')
+            return redirect("creatorDashboard")
         else:
+            messages.add_message(request, messages.ERROR, '😔 Login Failed')
             print("login failed, try again")
 
 
@@ -84,14 +85,18 @@ def qrView(request, event_id):
 def creatorDashboardView(request):
     user = request.user
     creator = Creator.objects.get(user=user)
-    #print(creator)
 
-    events = Event.objects.filter(creator=creator)
+    event_objects = Event.objects.filter(creator=creator)
 
-    for event in events:
-        print(event.name)
+    finished_events = []
+    events = []
+    for event in event_objects:
+        if event.getStatus() == Event.status_choices["over"]:
+            finished_events.append(event)
+        else:
+            events.append(event)
 
-    context = {"username": str(user), "events": events, "profile_path": creator.img.url}
+    context = {"username": str(user), "events": events, "finished_events": finished_events,  "profile_path": creator.img.url}
     print(context)
     return render(request, "creator_dashboard.html", context)
 
@@ -196,27 +201,21 @@ def enterEventView(request, event_id):
     return render(request, "countdown.html", context)
 
 def creatorDashboardEventView(request, event_id):
-    event = Event.objects.filter(id=event_id)[0]
-    winning_entries = Entry.objects.filter(won=True)
+    event = Event.objects.get(id=event_id)
 
-    if not(len(winning_entries)):
-        event.chooseWinners()
-        winning_entries = Entry.objects.filter(won=True)
+    context = {"event": event, "event_over": event.getStatus()}
 
-    winning_fans = []
-    for winning_fan in winning_entries:
-        this_win_info = {"username": winning_fan.fan.user.username, "prize": winning_fan.prize}
-        winning_fans.append(this_win_info)
-    
-    losing_entries = Entry.objects.filter(won=False)
-    losing_fans = []
+    entries = Entry.objects.filter(event=event)
+    context["entries"] = entries
 
-    for entry in losing_entries:
-        this_loss_info = entry.fan.user.username
-        losing_fans.append(this_loss_info)
+    if event.getStatus() == Event.status_choices["over"]:
+        winning_entries = entries.filter(won=True)
 
+        if not(len(winning_entries)):
+            event.chooseWinners()
+            winning_entries = entries.filter(won=True)
 
-    context = {"winning_fans": winning_fans, "losing_fans": losing_fans, "event": event, "profile_path": event.creator.img.url}
+        context["winning_entries"] = winning_entries
 
     return render(request, "creatorDashboardEvent.html", context)
 

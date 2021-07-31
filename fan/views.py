@@ -85,14 +85,18 @@ def qrView(request, event_id):
 def creatorDashboardView(request):
     user = request.user
     creator = Creator.objects.get(user=user)
-    #print(creator)
 
-    events = Event.objects.filter(creator=creator)
+    event_objects = Event.objects.filter(creator=creator)
 
-    for event in events:
-        print(event.name)
+    finished_events = []
+    events = []
+    for event in event_objects:
+        if event.getStatus() == Event.status_choices["over"]:
+            finished_events.append(event)
+        else:
+            events.append(event)
 
-    context = {"username": str(user), "events": events, "profile_path": creator.img.url}
+    context = {"username": str(user), "events": events, "finished_events": finished_events,  "profile_path": creator.img.url}
     print(context)
     return render(request, "creator_dashboard.html", context)
 

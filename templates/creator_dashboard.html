@@ -11,20 +11,39 @@
     </div>
     <a href="{% url 'createEvent' %}" class="btn btn-primary btn-md">Create an event</a>
     <div class="container card">
+        <h3>Your Events:</h3>
         <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Your Events</th>
-            </tr>
-          </thead>
           <tbody>
             {% for event in events %}
                 <tr>
-                    <td><a href="{% url 'creatorDashboardEvent' event.id %}">{{ event.name }}</a></td>
+                    <td><img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ event.img.url }}"/></td>
+                    <td><a href="{% url 'creatorDashboardEvent' event.id %}" class="btn btn-primary">{{ event.name }}</a></td>
+                    <td>{{ event.status }}</td>
                 </tr>
             {% endfor %}
           </tbody>
         </table>
     </div>
+    <div class="container card">
+        <h3>Past Events:</h3>
+        <table class="table table-hover">
+          <tbody>
+            {% for event in finished_events %}
+                <tr>
+                    <td><img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ event.img.url }}"/></td>
+                    <td><a class="btn btn-primary" href="{% url 'creatorDashboardEvent' event.id %}">{{ event.name }}</a></td>
+                    <td>{{ event.status }}</td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+
+    <style>
+        td {
+            width: 3%;
+        }
+
+    </style>
 
 {% endblock content %}

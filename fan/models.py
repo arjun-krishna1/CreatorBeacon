@@ -41,9 +41,9 @@ class Event(models.Model):
     img = models.ImageField(upload_to='profile/event/', null=True, blank=True)
 
     status_choices = {
-        "not_started": "not_started",
-        "in_progress": "in_progress",
-        "over": "over"}
+        "not_started": "Not Started",
+        "in_progress": "In Progress",
+        "over": "Over"}
 
     def __str__(self):
         return f"{self.name} by {self.creator.user.username} on {self.date}"
@@ -52,7 +52,7 @@ class Event(models.Model):
         curr_time = datetime.now().time()
 
         # hasn't started yet
-        if curr_time < self.start:
+        if self.date > datetime.now().date() or curr_time < self.start:
             self.status = self.status_choices["not_started"]
 
         elif curr_time >= self.start and curr_time < self.end:

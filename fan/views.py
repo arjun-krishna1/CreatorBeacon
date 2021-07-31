@@ -3,9 +3,18 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.conf import settings
+
+from datetime import datetime
+
 import qrcodefunctions as q
 
-from .models import Creator, Event, Prize
+from .models import (
+    Creator,
+    Event,
+    Prize,
+    Entry,
+    Fan,
+)
 
 from .forms import (
     CreateAccountForm,
@@ -96,13 +105,13 @@ def createEventView(request):
     context = {"username": str(request.user), "form": form}
     return render(request, "createEvent.html", context)
 
-form_keys = [
+form_keys = (
     "form-0-name",
     "form-1-name",
     "form-2-name",
     "form-3-name",
     "form-4-name",
-]
+)
 
 def createPrizeView(request, event_id):
     context = {}
@@ -125,3 +134,53 @@ def createPrizeView(request, event_id):
     form = PrizeSet()
     context = {"username": str(request.user), "form": form}
     return render(request, "createPrize.html", context)
+
+def get_diff_time(a, b):
+    zero_day = datetime.now()
+    start = datetime.combine(zero_day.date(), a)
+    end = datetime.combine(zero_day.date(), b)
+    return zero_day + (end - start )
+
+def enterEventView(request, event_id):
+    event = Event.objects.get(id=event_id)
+    curr_time = datetime.now().time()
+
+    
+    fan = Fan.objects.filter(user=request.user)
+
+    if len(fan) == 0:
+        fan = Fan(user = request.user)
+        fan.save()
+
+    else:
+        fan = fan[0]
+
+    context = {}
+
+    come_back_at = event.end.strftime("%H:%M %p")
+    if curr_time < event.start:
+        context["time_left"] = get_diff_time(event.start, curr_time).strftime("%H:%M:%S")
+        start_time_str = event.start.strftime("%H:%M %p")
+        context["status"] = f"Come back at { start_time_str } to enter"
+
+    elif curr_time >= event.start and curr_time < event.end:
+        fan.enter(event_id)
+        end_time_str = event.start.strftime("%H:%M %p")
+        context["time_left"] = get_diff_time(event.end, curr_time).strftime("%H:%M:%S")
+        context["status"] = f"You are entered! Come back after { come_back_at } to see if you won"
+    
+    else:
+        # redirect to page where it shows winners, show if they won
+        context["time_left"] = "00:00:00"
+
+
+        entry = Entry.objects.get(event=event, fan=fan)
+
+        if entry and entry.won:
+            context["status"] = f"Congratulations! you won a { entry.prize.name }"
+
+        else:
+            context["status"] = f"😔 you didn't win this time..."
+
+    return render(request, "countdown.html", context)
+

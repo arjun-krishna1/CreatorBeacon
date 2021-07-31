@@ -203,7 +203,7 @@ def enterEventView(request, event_id):
 def creatorDashboardEventView(request, event_id):
     event = Event.objects.get(id=event_id)
 
-    context = {"event": event, "event_over": event.getStatus()}
+    context = {"event": event, "event_over": event.getStatus()==Event.status_choices["over"]}
 
     entries = Entry.objects.filter(event=event)
     context["entries"] = entries

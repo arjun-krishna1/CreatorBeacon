@@ -18,6 +18,7 @@
                 <tr>
                     <td><img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ event.img.url }}"/></td>
                     <td><a href="{% url 'creatorDashboardEvent' event.id %}" class="btn btn-primary">{{ event.name }}</a></td>
+                    <td><a href="{% url 'qr' event.id %}" class="btn btn-primary">Get QR Code</a></td>
                     <td>{{ event.status }}</td>
                 </tr>
             {% endfor %}

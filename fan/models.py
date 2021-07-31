@@ -67,7 +67,7 @@ class Event(models.Model):
         prizes = Prize.objects.filter(event=self)
         fan_entries = Entry.objects.filter(event=self)
 
-        choices = random.choices(population=[entry.id for entry in fan_entries], k=len(prizes))
+        choices = random.choices(population=[entry.id for entry in fan_entries], k=min(len(fan_entries), len(prizes)))
 
         for i in range(len(choices)):
             entry = Entry.objects.get(id=choices[i])

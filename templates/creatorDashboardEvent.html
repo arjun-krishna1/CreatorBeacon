@@ -33,8 +33,10 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-    {%  endif %}
+        {% else %}
+            <a href="{% url 'qr' event.id %}" class="btn btn-primary">Get QR Code</a>
+        {%  endif %}
+    </div>
 
         <div class="container card">
             <h3>Everyone who has entered {{ event.name }}:</h3>
@@ -54,16 +56,5 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <!-- <table class="table" style = "table-layout: fixed;">
-                <thead>
-                    <tr>
-                        <th scope="col">Fan</th>
-                        <th scope="col">Contact</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table> -->
         </div>
 {% endblock content %}

@@ -31,8 +31,9 @@
           <tbody>
             {% for event in finished_events %}
                 <tr>
-                    <td><img class = "profilePicture" src="{{ event.img.url }}"/></td>
+                    <td><img class="profilePicture" src="{{ event.img.url }}"/></td>
                     <td><a style = "vertical-align: middle;" class="btn btn-primary" href="{% url 'creatorDashboardEvent' event.id %}">{{ event.name }}</a></td>
+                    <td><a href="{% url 'qr' event.id %}" class="btn btn-primary" style="display: none;">Get QR Code</a></td>
                     <td style = "vertical-align: middle;">{{ event.status }}</td>
                 </tr>
             {% endfor %}
@@ -43,6 +44,10 @@
     <style>
         td {
             width: 3%;
+        }
+
+        .btn {
+            width: 100%;
         }
 
     </style>

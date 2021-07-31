@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h3>{{ username }}, welcome to your creator dashboard!</h3>
+    <div class="container card">
+        <div>
+            <img height=100 width=100 class="img-thumbnail rounded-circle" src="{{ profile_path }}"/>
+            <h3>{{ username }}, welcome to your creator dashboard!</h3>
+        </div>
+    </div>
     <a href="{% url 'createEvent' %}" class="btn btn-primary btn-md">Create an event</a>
     <div class="container card">
         <table class="table table-hover">

@@ -7,12 +7,14 @@ import random
 
 class Creator(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    img = models.ImageField(upload_to='profile/creator/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}-Creator"
     
 class Fan(models.Model):            
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    img = models.ImageField(upload_to='profile/fan', null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}-Fan"
@@ -36,6 +38,7 @@ class Event(models.Model):
     date = models.DateField(null=True)
     start = models.TimeField(null=True)
     end = models.TimeField(null=True)
+    img = models.ImageField(upload_to='profile/event/', null=True, blank=True)
 
     status_choices = {
         "not_started": "not_started",
@@ -78,6 +81,7 @@ class Event(models.Model):
 class Prize(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100, null=True)
+    img = models.ImageField(upload_to='profile/prize', null=True, blank=True)
     def __str__(self):
         return f"{self.name} for {self.event.name} by {self.event.creator.user.username}"
 

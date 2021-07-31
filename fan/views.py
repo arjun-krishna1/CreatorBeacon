@@ -39,8 +39,8 @@ def createAccountView(request):
         if form.is_valid():
             new_user = User(username = request.POST["email"], password = request.POST["password"])
             new_user.save()
-            print(new_user)
-            print("account created")
+            #print(new_user)
+            #print("account created")
             return render(request, "createAccount_success.html")
         # TODO handle invalid account information
     
@@ -51,11 +51,11 @@ def createAccountView(request):
 def loginView(request):
     context = {}
     if request.method == 'POST':
-        print(request.POST['email'])
+        #print(request.POST['email'])
         user = authenticate(request, username=request.POST['email'], password=request.POST['password'])
         # TODO message about account login success status, you are logged in or please create an account
         if user is not None:
-            print("logged in")
+            #print("logged in")
             login(request, user)
             return render(request, "login_success.html")
         else:
@@ -78,20 +78,20 @@ def qrView(request, event_id):
     context["start"]= event.start.strftime("%H:%M %p")
     context["end"]= event.end.strftime("%H:%M %p")
 
-    print(context)
+    #print(context)
     return render(request, "qr.html", context)
   
 def creatorDashboardView(request):
     user = request.user
     creator = Creator.objects.get(user=user)
-    print(creator)
+    #print(creator)
 
     events = Event.objects.filter(creator=creator)
 
     for event in events:
         print(event.name)
 
-    context = {"username": str(user), "events": events}
+    context = {"username": str(user), "events": events, "profile_path": creator.img.url}
     print(context)
     return render(request, "creator_dashboard.html", context)
 
@@ -109,7 +109,7 @@ def createEventView(request):
         )
 
         new_event.save()
-        print("event created")
+        #print("event created")
         return redirect('createPrize', new_event.id)
 
     form = CreateEventForm()
@@ -128,7 +128,7 @@ def createPrizeView(request, event_id):
     context = {}
     if request.method == 'POST':
         # TODO handle invalid inputs
-        print("post data ", request.POST)
+        #print("post data ", request.POST)
         event = Event.objects.get(id=event_id)
 
         for key in form_keys:
@@ -138,7 +138,7 @@ def createPrizeView(request, event_id):
             )
             this_prize.save()
             
-        print("prizes saved")
+        #print("prizes saved")
         return redirect('creatorDashboard')
 
     PrizeSet = formset_factory(CreatePrizeForm, extra=5)

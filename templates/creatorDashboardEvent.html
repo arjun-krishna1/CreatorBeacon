@@ -8,11 +8,8 @@
             <img src="{{ event.img.url }}"/>
             <h3>{{ request.user.username }}, {{ event.name }} is {{ event.status }}</h3>
         </div>
-    {%  if event_over %}
-        <div class="container card">
-            {% if event_over %}
-                    <h3>The winners of {{ event.name }}:</h3>
-            {% endif %}
+        {%  if event_over %}
+            <h3>The winners of {{ event.name }}:</h3>
             <table class="table">
                 <thead>
                     <th scope="col">Winner</th>
@@ -29,8 +26,10 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-    {%  endif %}
+        {% else %}
+            <a href="{% url 'qr' event.id %}" class="btn btn-primary">Get QR Code</a>
+        {%  endif %}
+    </div>
 
         <div class="container card">
             <h3>Everyone who has entered {{ event.name }}:</h3>
@@ -45,6 +44,8 @@
                     <tr class = "pfp">
                         <td><img src="{{ entry.fan.img.url }}"/> {{ entry.fan.user.username }}</td>
                         <td>{{ entry.fan.user.email }}</td>
+                        <td> </td>
+                        <
                     </tr>
                     {% endfor %}
                 </tbody>

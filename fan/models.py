@@ -50,12 +50,13 @@ class Event(models.Model):
 
     def getStatus(self):
         curr_time = datetime.now().time()
+        print("soemthing", datetime.now())
 
         # hasn't started yet
         if self.date > datetime.now().date() or curr_time < self.start:
             self.status = self.status_choices["not_started"]
 
-        elif curr_time >= self.start and curr_time < self.end:
+        elif self.date == datetime.now().date() and curr_time >= self.start and curr_time < self.end:
             self.status = self.status_choices["in_progress"]
 
         else:

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from datetime import datetime
+import datetime
 
 import qrcodefunctions as q
 
@@ -15,6 +15,27 @@ from .models import (
     Entry,
     Fan,
 )
+
+
+def split_time_string(time_string):
+    output = {
+        "hour": time_string[:2],
+        "minute": time_string[2:4],
+        "second": time_string[4:6],
+    }
+    return output
+
+def get_diff_time2(chosen_time): #takes in format hhmmss
+    chosen_time = split_time_string(chosen_time)
+    current = split_time_string(datetime.datetime.now().strftime("%H%M%S"))
+    diff = lambda x: "{:02d}".format(abs(int(chosen_time.get(x, 0)) - int(current.get(x, 0))))
+    difference = [diff("hour"), diff("minute"), diff("second")]
+    return ":".join(difference)
+
+
+def get_diff_time(a):
+    value = get_diff_time2(str(a).replace(":", ""))
+    return value
 
 from .forms import (
     CreateAccountForm,
@@ -151,17 +172,12 @@ def createPrizeView(request, event_id):
     context = {"username": str(request.user), "form": form}
     return render(request, "createPrize.html", context)
 
-def get_diff_time(a, b):
-    zero_day = datetime.now()
-    start = datetime.combine(zero_day.date(), a)
-    end = datetime.combine(zero_day.date(), b)
-    return zero_day + (end - start )
+
+
 
 def enterEventView(request, event_id):
     event = Event.objects.get(id=event_id)
-    curr_time = datetime.now().time()
 
-    
     fan = Fan.objects.filter(user=request.user)
 
     if len(fan) == 0:
@@ -176,14 +192,14 @@ def enterEventView(request, event_id):
     come_back_at = event.end.strftime("%H:%M %p")
     event_status = event.getStatus()
     if event_status == event.status_choices["not_started"]:
-        context["time_left"] = get_diff_time(event.start, curr_time).strftime("%H:%M:%S")
+        context["time_left"] = get_diff_time(event.start)
         start_time_str = event.start.strftime("%H:%M %p")
         context["status"] = f"Come back at { start_time_str } to enter"
 
     elif event_status == event.status_choices["in_progress"]:
         fan.enter(event_id)
         end_time_str = event.start.strftime("%H:%M %p")
-        context["time_left"] = get_diff_time(event.end, curr_time).strftime("%H:%M:%S")
+        context["time_left"] = get_diff_time(event.end)
         context["status"] = f"You are entered! Come back after { come_back_at } to see if you won"
     
     else:

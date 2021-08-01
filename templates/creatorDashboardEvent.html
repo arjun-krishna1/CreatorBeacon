@@ -4,11 +4,10 @@
 {% block content %}
     <div class="container card">
         <div>
-            <img class = "eventImage" src="{{ event.creator.img.url }}"/>
+            <img class = "eventImage" src="{{ event.img.url }}"/>
         </div>
-        <br>
         <div class = "pfp center">
-            <img src="{{ event.img.url }}"/>
+            <img src="{{  event.creator.img.url }}"/>
             <h3>&nbsp;&nbsp;{{ request.user.username }}. {{ event.name }} is {{ event.status }}</h3>
         </div>
         <br>
